@@ -3,6 +3,9 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const UsuarioRepository = require('../repositories/UsuarioRepository');
+const Usuarios = require('../models/Usuarios');
+
+const repUsuario = new UsuarioRepository(Usuarios);
 
 /**
  * @swagger
@@ -37,7 +40,7 @@ router.post('/', async (req, res) => {
     console.log(req.body)
 
     console.log(email)
-    const usuario = await UsuarioRepository.findByEmail(email);
+    const usuario = await repUsuario.findByEmail(email);
 
     if (!usuario) {
       return res.status(404).send('Usuário não encontrado');

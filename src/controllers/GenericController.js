@@ -1,7 +1,16 @@
 class GenericController {
-    async create(req, res, repository) {
+
+    constructor(target) {
+        if (new.target === GenericController) {
+            throw new TypeError("Cannot construct Abstract instances directly");
+        }
+
+        this.repository = target;
+    }
+
+    async create(req, res) {
         try {
-            const entity = await repository.create(req.body);
+            const entity = await this.repository.create(req.body);
             res.status(201).json(entity);
         } catch (error) {
             console.error('Error in create:', error);
@@ -9,9 +18,10 @@ class GenericController {
         }
     }
 
-    async findAll(req, res, repository) {
+    async findAll(req, res) {
         try {
-            const entities = await repository.findAll();
+            console.log(this)
+            const entities = await this.repository.findAll();
             res.status(200).json(entities);
         } catch (error) {
             console.error('Error in findAll:', error);
@@ -19,10 +29,10 @@ class GenericController {
         }
     }
 
-    async findById(req, res, repository) {
+    async findById(req, res) {
         try {
             const { id } = req.params;
-            const entity = await repository.findById(id); // Use findByPk instead of findById
+            const entity = await this.repository.findById(id); // Use findByPk instead of findById
             if (!entity) {
                 return res.status(404).json({ message: 'Nenhum resultado encontrado!' });
             }
@@ -33,14 +43,14 @@ class GenericController {
         }
     }
 
-    async update(req, res, repository) {
+    async update(req, res) {
         try {
             const { id } = req.params;
-            const [updated] = await repository.update(id, req.body);
+            const [updated] = await this.repository.update(id, req.body);
             if (!updated) {
                 return res.status(404).json({ message: 'Nenhum resultado encontrado!' });
             }
-            const updatedEntity = await repository.findById(id);
+            const updatedEntity = await this.repository.findById(id);
             res.status(200).json(updatedEntity);
         } catch (error) {
             console.error('Error in update:', error);
@@ -48,10 +58,10 @@ class GenericController {
         }
     }
 
-    async delete(req, res, repository) {
+    async delete(req, res) {
         try {
             const { id } = req.params;
-            const deleted = await repository.delete(id);
+            const deleted = await this.repository.delete(id);
             if (!deleted) {
                 return res.status(404).json({ message: 'Nenhum resultado encontrado!' });
             }
@@ -63,4 +73,4 @@ class GenericController {
     }
 }
 
-module.exports = new GenericController();
+module.exports = GenericController;

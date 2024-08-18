@@ -1,14 +1,15 @@
-const Usuarios = require('../models/Usuarios');
 const GenericRepository = require('./GenericRepository');
 
 class UsuarioRepository extends GenericRepository {
-    constructor() {
-        super(Usuarios);
+    constructor(model) {
+        super(model);
+
+        this.model = model;
     }
 
     async findByEmail(email) {
-        return await Usuarios.findOne({ where: { email } });
+        return await this.model.findOne({ where: { email } });
     }
 }
 
-module.exports = new UsuarioRepository();
+module.exports = UsuarioRepository;

@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const UsuarioController = require('../controllers/UsuarioController');
+const UsuarioRepository = require('../repositories/UsuarioRepository');
+const Usuarios = require('../models/Usuarios');
+
+const repUsuario = new UsuarioRepository(Usuarios);
+const usuarioController = new UsuarioController(repUsuario);
 
 /**
  * @swagger
@@ -21,7 +26,7 @@ const UsuarioController = require('../controllers/UsuarioController');
  *       500:
  *         description: Erro no servidor!
  */
-router.get('/', UsuarioController.findAll);
+router.get('/', usuarioController.findAll.bind(usuarioController));
 
 
 /**
@@ -48,7 +53,7 @@ router.get('/', UsuarioController.findAll);
  *       500:
  *         description: Erro no servidor!
  */
-router.get('/:id', UsuarioController.findById);
+router.get('/:id', usuarioController.findById.bind(usuarioController));
 
 
 /**
@@ -83,7 +88,7 @@ router.get('/:id', UsuarioController.findById);
  *       500:
  *         description: Erro no servidor!
  */
-router.post('/', UsuarioController.createNewUser);
+router.post('/', usuarioController.createNewUser.bind(usuarioController));
 
 
 /**
@@ -121,7 +126,7 @@ router.post('/', UsuarioController.createNewUser);
  *       500:
  *         description: Erro no servidor!
  */
-router.put('/:id', UsuarioController.update);
+router.put('/:id', usuarioController.update.bind(usuarioController));
 
 /**
  * @swagger
@@ -147,6 +152,6 @@ router.put('/:id', UsuarioController.update);
  *       500:
  *         description: Erro no servidor!
  */
-router.delete('/:id', UsuarioController.delete);
+router.delete('/:id', usuarioController.delete.bind(usuarioController));
 
 module.exports = router;

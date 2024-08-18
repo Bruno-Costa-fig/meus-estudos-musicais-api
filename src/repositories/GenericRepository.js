@@ -1,5 +1,9 @@
 class GenericRepository {
     constructor(model) {
+        if (new.target === GenericRepository) {
+            throw new TypeError("Cannot construct Abstract instances directly");
+        }
+        
         this.Model = model;
     }
 
