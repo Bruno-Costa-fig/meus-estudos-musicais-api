@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const UsuarioController = require('../controllers/UsuarioController');
 const UsuarioRepository = require('../repositories/UsuarioRepository');
-const Usuarios = require('../models/Usuarios');
+const { Usuarios } = require('../models/Usuarios');
+const { hasPermission } = require('../middlewares/hasPermission');
 
 const repUsuario = new UsuarioRepository(Usuarios);
 const usuarioController = new UsuarioController(repUsuario);
@@ -88,7 +89,7 @@ router.get('/:id', usuarioController.findById.bind(usuarioController));
  *       500:
  *         description: Erro no servidor!
  */
-router.post('/', usuarioController.createNewUser.bind(usuarioController));
+router.post('/', hasPermission(['criar_usuario']),usuarioController.createNewUser.bind(usuarioController));
 
 
 /**

@@ -22,4 +22,4 @@ const Usuarios = connection.define('Usuarios', {
     }
 });
 
-module.exports = Usuarios;
+module.exports = { Usuarios };

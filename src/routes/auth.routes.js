@@ -3,7 +3,9 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const UsuarioRepository = require('../repositories/UsuarioRepository');
-const Usuarios = require('../models/Usuarios');
+const { Usuarios } = require('../models/Usuarios');
+const { Role } = require('../models/rbac/Role');
+const { Permission } = require('../models/rbac/Permission');
 
 const repUsuario = new UsuarioRepository(Usuarios);
 
@@ -37,10 +39,12 @@ router.post('/', async (req, res) => {
   try {
     const { email, senha } = req.body;
 
-    console.log(req.body)
-
-    console.log(email)
-    const usuario = await repUsuario.findByEmail(email);
+    const usuario = await repUsuario.findOne({
+      where:{email:email},
+      include: [{ model: Role, as: 'roles', through: { attributes: [] }, 
+        include:[{ model: Permission, as: 'permissions', through: { attributes: [] } }]
+      }],
+    })
 
     if (!usuario) {
       return res.status(404).send('Usuário não encontrado');
@@ -52,7 +56,7 @@ router.post('/', async (req, res) => {
       return res.status(401).send('Senha incorreta');
     }
 
-    const payload = { id: usuario.id, email: usuario.email }
+    const payload = { id: usuario.id, email: usuario.email, roles: usuario.roles };
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.status(200).json({token});
 

@@ -15,6 +15,10 @@ class GenericRepository {
         return await this.Model.findAll();
     }
 
+    async findOne(where) {
+        return await this.Model.findOne(where);
+    }
+
     async findById(id) {
         return await this.Model.findByPk(id);
     }

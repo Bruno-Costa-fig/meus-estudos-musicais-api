@@ -12,5 +12,6 @@ const router = Router();
 router.use('/usuarios', auth, usuarioRoutes);
 router.use('/login', authRoutes);
 router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+router.use('/rbac', require('./rbac.routes'));
 
 module.exports = router;

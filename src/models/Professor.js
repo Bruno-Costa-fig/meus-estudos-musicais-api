@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const {connection} = require('../db/connection');// Assuming you have a database configuration file
-const Usuarios = require('./Usuarios');
+const { Usuarios } = require('./Usuarios');
 const Gem = require('./Gem');
 
 const Professor = connection.define('Professor', {
